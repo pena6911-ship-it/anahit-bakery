@@ -1,7 +1,7 @@
 const { createClient } = require('@supabase/supabase-js');
 
-// This function runs automatically every Friday at midnight ET
-// Scheduled via netlify.toml
+// Runs every Saturday at 4:00 AM UTC = Friday midnight ET
+// Resets ordered count to 0 AND reopens orders (sold_out = false) for new week
 
 exports.handler = async () => {
   const supabase = createClient(
@@ -11,8 +11,8 @@ exports.handler = async () => {
 
   const { error } = await supabase
     .from('stock')
-    .update({ ordered: 0 })
-    .gte('product_id', 1); // resets all products
+    .update({ ordered: 0, sold_out: false })
+    .gte('product_id', 1);
 
   if (error) {
     console.error('Reset failed:', error.message);
@@ -22,9 +22,9 @@ exports.handler = async () => {
     };
   }
 
-  console.log('Stock reset successfully for new week');
+  console.log('Stock reset and orders reopened for new week');
   return {
     statusCode: 200,
-    body: JSON.stringify({ success: true, message: 'Stock reset for new week' })
+    body: JSON.stringify({ success: true, message: 'Stock reset and orders reopened for new week' })
   };
 };
