@@ -1135,7 +1135,7 @@ async function loadStock() {
       const product = products.find(p => p.id === item.product_id);
       if (product) {
         const remaining = item.limit - item.ordered;
-        if (remaining <= 0) {
+        if (item.sold_out || remaining <= 0) {
           product.soldOut = true;
           product.remaining = 0;
         } else {
