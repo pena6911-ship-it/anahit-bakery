@@ -619,7 +619,7 @@
       <div class="section-title">This Saturday's Varieties</div>
     </div>
     <div class="weekend-badge">
-      Pre-orders close <span id="thursdayDate">...</span>
+      Pre-orders close <span id="thursdayDate">...</span> for pick up <span id="saturdayDate">...</span>
     </div>
   </div>
 
@@ -1095,27 +1095,36 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 
-// ── DYNAMIC THURSDAY DATE ──
-function getThursdayThisWeek() {
+// ── DYNAMIC THURSDAY / SATURDAY DATES ──
+function setWeeklyDates() {
   const months = ['January','February','March','April','May','June',
                   'July','August','September','October','November','December'];
   const now = new Date();
   const day = now.getDay(); // 0=Sun,1=Mon,...,4=Thu,5=Fri,6=Sat
-  // Days until Thursday: Thu is day 4
-  // If today is Fri(5) or Sat(6), jump to NEXT week's Thursday
+
+  // Find the upcoming/current Thursday:
+  // Sun(0)–Thu(4): this week's Thursday
+  // Fri(5)–Sat(6): next week's Thursday (orders are closed, show next cycle)
   let diff;
   if (day <= 4) {
-    diff = 4 - day; // Mon–Thu: this week's Thursday
+    diff = 4 - day;
   } else {
-    diff = 7 - day + 4; // Fri–Sat: next week's Thursday
+    diff = 7 - day + 4;
   }
+
   const thursday = new Date(now);
   thursday.setDate(now.getDate() + diff);
-  const month = months[thursday.getMonth()];
-  const date = thursday.getDate();
-  return `Thursday ${month} ${date} at 8PM ET`;
+
+  const saturday = new Date(thursday);
+  saturday.setDate(thursday.getDate() + 2);
+
+  const thursdayStr = `Thursday ${months[thursday.getMonth()]} ${thursday.getDate()} at 8PM ET`;
+  const saturdayStr = `Saturday ${months[saturday.getMonth()]} ${saturday.getDate()}`;
+
+  document.getElementById('thursdayDate').textContent = thursdayStr;
+  document.getElementById('saturdayDate').textContent = saturdayStr;
 }
-document.getElementById('thursdayDate').textContent = getThursdayThisWeek();
+setWeeklyDates();
 
 // ── STOCK MANAGEMENT ──
 async function loadStock() {
@@ -1126,7 +1135,7 @@ async function loadStock() {
       const product = products.find(p => p.id === item.product_id);
       if (product) {
         const remaining = item.limit - item.ordered;
-        if (item.sold_out || remaining <= 0) {
+        if (remaining <= 0) {
           product.soldOut = true;
           product.remaining = 0;
         } else {
