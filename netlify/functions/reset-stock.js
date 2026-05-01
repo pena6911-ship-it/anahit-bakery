@@ -1,6 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 
-// Runs every Saturday at 4:00 AM UTC = Friday midnight ET
+// Runs every Sunday at 11:00 AM UTC = Sunday 7:00 AM ET
 // Resets ordered count to 0 AND reopens orders (sold_out = false) for new week
 
 exports.handler = async () => {
