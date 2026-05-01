@@ -1101,19 +1101,24 @@ function getThursdayThisWeek() {
                   'July','August','September','October','November','December'];
   const now = new Date();
   const day = now.getDay(); // 0=Sun,1=Mon,...,4=Thu,5=Fri,6=Sat
-  // Days until Thursday: Thu is day 4
   // If today is Fri(5) or Sat(6), jump to NEXT week's Thursday
   let diff;
   if (day <= 4) {
-    diff = 4 - day; // Mon–Thu: this week's Thursday
+    diff = 4 - day;
   } else {
-    diff = 7 - day + 4; // Fri–Sat: next week's Thursday
+    diff = 7 - day + 4;
   }
   const thursday = new Date(now);
   thursday.setDate(now.getDate() + diff);
-  const month = months[thursday.getMonth()];
-  const date = thursday.getDate();
-  return `Thursday ${month} ${date} at 8PM ET`;
+
+  // Saturday is always Thursday + 2
+  const saturday = new Date(thursday);
+  saturday.setDate(thursday.getDate() + 2);
+
+  const thursdayStr = `Thursday ${months[thursday.getMonth()]} ${thursday.getDate()} at 8:30PM ET`;
+  const saturdayStr = `${months[saturday.getMonth()]} ${saturday.getDate()}`;
+
+  return `${thursdayStr} for Saturday ${saturdayStr} pickup`;
 }
 document.getElementById('thursdayDate').textContent = getThursdayThisWeek();
 
@@ -1126,10 +1131,11 @@ async function loadStock() {
       const product = products.find(p => p.id === item.product_id);
       if (product) {
         const remaining = item.limit - item.ordered;
-        if (remaining <= 0) {
+        if (item.sold_out || remaining <= 0) {
           product.soldOut = true;
           product.remaining = 0;
         } else {
+          product.soldOut = false;
           product.remaining = remaining;
         }
       }
