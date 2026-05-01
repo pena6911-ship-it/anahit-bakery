@@ -8,7 +8,7 @@ exports.handler = async () => {
 
   const { data, error } = await supabase
     .from('stock')
-    .select('product_id, product_name, ordered, limit');
+    .select('product_id, product_name, ordered, limit, sold_out');
 
   if (error) {
     return {
