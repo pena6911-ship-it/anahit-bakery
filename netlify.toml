@@ -1,6 +1,14 @@
 [build]
   publish = "."
   functions = "netlify/functions"
+  command = "npm install"
 
 [functions."reset-stock"]
-  schedule = "0 4 * * 6"
+  schedule = "0 11 * * 0"
+  # Runs every Sunday at 11:00 AM UTC = Sunday 7:00 AM ET
+  # Resets ordered counts to 0 and reopens all orders for new week
+
+[functions."close-orders"]
+  schedule = "30 0 * * 5"
+  # Runs every Friday at 00:30 UTC = Thursday 8:30PM ET
+  # Marks all products as sold out to stop new orders
