@@ -529,6 +529,8 @@
     .nav-links { display: none; }
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>emailjs.init('q62O3cYHsOLIk7497');</script>
 </head>
 <body>
 
@@ -1014,6 +1016,20 @@ async function submitOrder() {
     if (res.ok) {
       // Update stock counts in Supabase
       await updateStock(items);
+
+      // Send confirmation email to customer via EmailJS
+      const orderItemsFormatted = items.map(i =>
+        `${i.name} x${i.qty} — $${(i.price * i.qty).toFixed(2)}`
+      ).join('\n');
+
+      await emailjs.send('service_4ew8j25', 'template_gm0wzdv', {
+        order_ref: ref,
+        customer_name: `${first} ${last}`,
+        customer_email: email,
+        order_items: orderItemsFormatted,
+        order_total: `$${total.toFixed(2)}`
+      });
+
       document.getElementById('orderRef').textContent = ref;
       document.getElementById('orderForm').style.display = 'none';
       document.getElementById('successScreen').classList.add('active');
