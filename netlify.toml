@@ -2,9 +2,5 @@
   publish = "."
   functions = "netlify/functions"
 
-[[plugins]]
-  package = "@netlify/plugin-functions-install-deps"
-
 [functions."reset-stock"]
   schedule = "0 4 * * 6"
-  # Runs every Saturday at 4:00 AM UTC = Friday midnight ET
