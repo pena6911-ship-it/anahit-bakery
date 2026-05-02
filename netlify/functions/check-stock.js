@@ -1,6 +1,18 @@
 const { createClient } = require('@supabase/supabase-js');
 
-exports.handler = async () => {
+const headers = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS'
+};
+
+exports.handler = async (event) => {
+  // Handle CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 204, headers, body: '' };
+  }
+
   const supabase = createClient(
     process.env.SUPABASE_URL,
     process.env.SUPABASE_KEY
@@ -13,13 +25,14 @@ exports.handler = async () => {
   if (error) {
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ error: error.message })
     };
   }
 
   return {
     statusCode: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(data)
   };
 };
