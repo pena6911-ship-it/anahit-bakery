@@ -469,7 +469,70 @@
     font-family: 'DM Sans', sans-serif;
   }
 
-  /* ── EMAIL SIGNUP ── */
+  /* ── UPCOMING MARKETS ── */
+  #markets { background: var(--warm-white); }
+  .markets-grid {
+    display: flex; flex-direction: column; gap: 24px; margin-top: 48px;
+  }
+  .market-card {
+    display: grid;
+    grid-template-columns: 56px 1fr 260px;
+    align-items: center;
+    gap: 28px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 32px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .market-card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+  .market-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 600;
+    color: var(--wheat); line-height: 1;
+    align-self: flex-start; padding-top: 4px;
+  }
+  .market-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: var(--crust-dark);
+    margin-bottom: 8px;
+  }
+  .market-dates {
+    font-size: 13px; font-weight: 500;
+    color: var(--accent); letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .market-detail {
+    font-size: 14px; color: var(--char-soft); margin-bottom: 6px;
+  }
+  .market-address {
+    font-size: 13px; color: var(--muted);
+  }
+  .market-img-wrap {
+    border-radius: 14px; overflow: hidden;
+    height: 160px;
+  }
+  .market-img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.3s;
+  }
+  .market-card:hover .market-img { transform: scale(1.04); }
+
+  @media (max-width: 768px) {
+    .market-card {
+      grid-template-columns: 40px 1fr;
+      grid-template-rows: auto auto;
+    }
+    .market-img-wrap {
+      grid-column: 1 / -1;
+      height: 180px;
+    }
+  }
+
+    /* ── EMAIL SIGNUP ── */
   #signup { background: var(--accent-light); text-align: center; }
   .signup-wrapper { max-width: 500px; margin: 0 auto; }
   .signup-icon {
@@ -722,6 +785,41 @@
       <div class="testimonial">"The best sourdough I've tasted outside of San Francisco — honestly better."</div>
       <div class="testimonial-author">— Regular customer, Five Points market</div>
     </div>
+  </div>
+</section>
+
+<!-- UPCOMING MARKETS -->
+<section id="markets">
+  <div class="section-label">Where to find us</div>
+  <div class="section-title">Upcoming Markets</div>
+  <div class="markets-grid">
+
+    <div class="market-card">
+      <div class="market-num">01</div>
+      <div class="market-info">
+        <h3 class="market-name">Waxhaw Farmers Market</h3>
+        <div class="market-dates">April 18 – December 22</div>
+        <div class="market-detail">Every Saturday · 9AM–12PM</div>
+        <div class="market-address">27283 Waxhaw Pkwy, Waxhaw, NC 28173</div>
+      </div>
+      <div class="market-img-wrap">
+        <img src="https://anahitbakery.netlify.app/img/waxhaw.jpg" alt="Waxhaw Farmers Market" class="market-img">
+      </div>
+    </div>
+
+    <div class="market-card">
+      <div class="market-num">02</div>
+      <div class="market-info">
+        <h3 class="market-name">Armenian Food Festival</h3>
+        <div class="market-dates">May 29 – May 31</div>
+        <div class="market-detail">Three-day festival</div>
+        <div class="market-address">7000 Park Rd, Charlotte, NC 28210</div>
+      </div>
+      <div class="market-img-wrap">
+        <img src="https://anahitbakery.netlify.app/img/foodfest.PNG" alt="Armenian Food Festival" class="market-img">
+      </div>
+    </div>
+
   </div>
 </section>
 
