@@ -618,7 +618,7 @@
       <div class="section-label">Weekend menu</div>
       <div class="section-title">This Saturday's Varieties</div>
     </div>
-    <div class="weekend-badge">
+    <div class="weekend-badge" id="weekendBadge">
       Pre-orders close <span id="thursdayDate">...</span> for pick up <span id="saturdayDate">...</span>
     </div>
   </div>
@@ -1099,18 +1099,37 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 function setWeeklyDates() {
   const months = ['January','February','March','April','May','June',
                   'July','August','September','October','November','December'];
-  const now = new Date();
-  const day = now.getDay(); // 0=Sun,1=Mon,...,4=Thu,5=Fri,6=Sat
 
-  // Find the upcoming/current Thursday:
-  // Sun(0)–Thu(4): this week's Thursday
-  // Fri(5)–Sat(6): next week's Thursday (orders are closed, show next cycle)
-  let diff;
-  if (day <= 4) {
-    diff = 4 - day;
-  } else {
-    diff = 7 - day + 4;
+  // Get current time in ET (handles EST/EDT automatically)
+  const nowUtc = new Date();
+  const etString = nowUtc.toLocaleString('en-US', { timeZone: 'America/New_York' });
+  const now = new Date(etString);
+  const day = now.getDay();   // 0=Sun,1=Mon,2=Tue,3=Wed,4=Thu,5=Fri,6=Sat
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+
+  // ── CLOSED WINDOW: Thursday after 8:30PM ET  →  Sunday before 7:00AM ET ──
+  // Thu(4) >= 20:30, Fri(5) all day, Sat(6) all day, Sun(0) before 07:00
+  const isThursdayAfterClose = (day === 4 && (hour > 20 || (hour === 20 && minute >= 30)));
+  const isFridayOrSaturday   = (day === 5 || day === 6);
+  const isSundayBeforeOpen   = (day === 0 && hour < 7);
+  const ordersClosed = isThursdayAfterClose || isFridayOrSaturday || isSundayBeforeOpen;
+
+  const badge = document.getElementById('weekendBadge');
+
+  if (ordersClosed) {
+    // Show closed message; hide the dynamic-date spans
+    badge.innerHTML = "This week's pre-orders are now closed.";
+    badge.style.background = 'var(--wheat)';
+    badge.style.color = 'var(--char-soft)';
+    badge.style.borderColor = 'rgba(139,94,60,0.25)';
+    return;
   }
+
+  // ── OPEN WINDOW: find the upcoming Thursday of the current week ──
+  // Mon–Thu before close: this week's Thursday (diff = 4 - day)
+  // Sun from 7AM onward: this week's Thursday (diff = 4 - 0 = 4)
+  const diff = 4 - day;
 
   const thursday = new Date(now);
   thursday.setDate(now.getDate() + diff);
@@ -1121,8 +1140,11 @@ function setWeeklyDates() {
   const thursdayStr = `Thursday ${months[thursday.getMonth()]} ${thursday.getDate()} at 8PM ET`;
   const saturdayStr = `Saturday ${months[saturday.getMonth()]} ${saturday.getDate()}`;
 
-  document.getElementById('thursdayDate').textContent = thursdayStr;
-  document.getElementById('saturdayDate').textContent = saturdayStr;
+  badge.innerHTML = `Pre-orders close <span id="thursdayDate">${thursdayStr}</span> for pick up <span id="saturdayDate">${saturdayStr}</span>`;
+  // Restore default badge styles (in case page was cached in closed state)
+  badge.style.background = '';
+  badge.style.color = '';
+  badge.style.borderColor = '';
 }
 setWeeklyDates();
 
