@@ -1168,7 +1168,11 @@ async function loadStock() {
     renderProducts();
   } catch (err) {
     console.error('Could not load stock:', err);
-    renderProducts(); // render anyway with default soldOut values
+    // Fail safe: if stock cannot be loaded, mark everything sold out
+    // so we never accidentally show products as available when the
+    // true state is unknown. The real values live in Supabase.
+    products.forEach(p => { p.soldOut = true; p.remaining = 0; });
+    renderProducts();
   }
 }
 
