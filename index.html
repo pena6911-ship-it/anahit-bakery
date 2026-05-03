@@ -578,9 +578,14 @@
     font-size: 18px; color: var(--cream);
   }
   footer p { font-size: 13px; }
-  .footer-links { display: flex; gap: 24px; list-style: none; }
+  .footer-links { display: flex; gap: 24px; list-style: none; align-items: center; flex-wrap: wrap; }
   .footer-links a { color: rgba(250,246,239,0.5); text-decoration: none; font-size: 13px; transition: color 0.2s; }
   .footer-links a:hover { color: var(--cream); }
+  .footer-social-icons { display: flex; gap: 16px; align-items: center; }
+  .social-icon { display: flex; align-items: center; transition: opacity 0.2s, transform 0.2s; }
+  .social-icon:hover { opacity: 1 !important; transform: translateY(-2px); }
+  .social-icon svg { width: 22px; height: 22px; fill: rgba(250,246,239,0.5); transition: fill 0.2s; }
+  .social-icon:hover svg { fill: var(--cream); }
 
   @media (max-width: 768px) {
     .hero { grid-template-columns: 1fr; min-height: auto; padding: 60px 5vw; }
@@ -851,10 +856,33 @@
     <li><a href="#menu">Menu</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#signup">Email List</a></li>
-    <li><a href="https://www.facebook.com/NCANAHIT" target="_blank" rel="noopener">Facebook</a></li>
-    <li><a href="https://www.instagram.com/ana_hit_sourdoughbread?igsh=dGdkZ2VobWNkMzc3" target="_blank" rel="noopener">Instagram</a></li>
-    <li><a href="https://www.youtube.com/@ana_hit2025" target="_blank" rel="noopener">YouTube</a></li>
-    <li><a href="mailto:hello@anahit.com">Contact</a></li>
+    <li class="footer-social-icons">
+      <!-- Facebook -->
+      <a href="https://www.facebook.com/NCANAHIT" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 12.073C24 5.404 18.627 0 12 0S0 5.404 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
+        </svg>
+      </a>
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/ana_hit_sourdoughbread?igsh=dGdkZ2VobWNkMzc3" target="_blank" rel="noopener" class="social-icon" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+      </a>
+      <!-- YouTube -->
+      <a href="https://youtube.com/@ana_hit2025?si=axKpGpcGCuJhSr5V" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </a>
+    </li>
+    <li>
+      <a href="mailto:hello@anahit.com" class="social-icon" aria-label="Contact us by email">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 4H4C2.897 4 2 4.897 2 6v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 2v.511l-8 5.52-8-5.52V6h16zM4 18V9.044l7.386 5.098a1 1 0 0 0 1.228 0L20 9.044 20.002 18H4z"/>
+        </svg>
+      </a>
+    </li>
   </ul>
 </footer>
 
