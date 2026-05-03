@@ -1120,12 +1120,26 @@ async function submitOrder() {
         `${i.name} x${i.qty} — $${(i.price * i.qty).toFixed(2)}`
       ).join('\n');
 
+      // Build order date and pickup Saturday date
+      const months = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
+      const now = new Date();
+      const orderDate = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+      // Find the upcoming Saturday (day 6); if today IS Saturday use today
+      const daysUntilSat = (6 - now.getDay() + 7) % 7 || 7;
+      const sat = new Date(now);
+      sat.setDate(now.getDate() + daysUntilSat);
+      const pickupDate = `Saturday ${months[sat.getMonth()]} ${sat.getDate()}, ${sat.getFullYear()}`;
+
       await emailjs.send('service_4ew8j25', 'template_gm0wzdv', {
         order_ref: ref,
         customer_name: `${first} ${last}`,
         customer_email: email,
         order_items: orderItemsFormatted,
-        order_total: `$${total.toFixed(2)}`
+        order_total: `$${total.toFixed(2)}`,
+        order_date: orderDate,
+        pickup_date: pickupDate
       });
 
       document.getElementById('orderRef').textContent = ref;
