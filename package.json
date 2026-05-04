@@ -2,6 +2,7 @@
   "name": "anahit-bakery",
   "version": "1.0.0",
   "dependencies": {
-    "@supabase/supabase-js": "^2.0.0"
+    "@supabase/supabase-js": "^2.0.0",
+    "square": "^39.0.0"
   }
 }
