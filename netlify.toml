@@ -12,3 +12,35 @@
   schedule = "30 0 * * 5"
   # Runs every Friday at 00:30 UTC = Thursday 8:30PM ET
   # Marks all products as sold out to stop new orders
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline'
+        https://sandbox.web.squarecdn.com
+        https://web.squarecdn.com
+        https://cdn.jsdelivr.net
+        https://www.emailjs.com
+        https://fonts.googleapis.com;
+      style-src 'self' 'unsafe-inline'
+        https://fonts.googleapis.com;
+      font-src 'self'
+        https://fonts.gstatic.com
+        https://square-fonts-production-f.squarecdn.com
+        https://cash-f.squarecdn.com
+        https://d1g145x70srn7h.cloudfront.net;
+      frame-src 'self'
+        https://sandbox.web.squarecdn.com
+        https://web.squarecdn.com
+        https://*.squarecdn.com
+        https://*.squarecdnpayments.com;
+      connect-src 'self'
+        https://*.squareup.com
+        https://*.squarecdn.com
+        https://formspree.io
+        https://api.emailjs.com
+        https://*.supabase.co;
+      img-src 'self' data: https:;
+    """
