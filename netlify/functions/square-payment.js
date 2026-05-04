@@ -27,7 +27,7 @@ BigInt.prototype.toJSON = function () { return this.toString(); };
 
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: Environment.Sandbox, // ← Change to Environment.Production when going live
+  environment: Environment.Production, // ← Change to Environment.Production when going live
 });
 
 exports.handler = async (event) => {
