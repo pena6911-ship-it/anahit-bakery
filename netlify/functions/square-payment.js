@@ -10,7 +10,7 @@
  *   SQUARE_ACCESS_TOKEN  — from developer.squareup.com → your app → Credentials
  *
  * TO GO LIVE:
- *   1. Change Environment.Sandbox → Environment.Production (line ~22)
+ *   1. Change Environment.Sandbox → Environment.Production (line ~28)
  *   2. Update SQUARE_ACCESS_TOKEN in Netlify to your Production access token
  *   3. Swap the Square SDK src in sourdough_preorder.html <head> to:
  *      https://web.squarecdn.com/v1/square.js
@@ -20,6 +20,10 @@
  */
 
 const { Client, Environment } = require('square');
+
+// Square SDK uses BigInt internally. JSON.stringify cannot handle BigInt by
+// default, so we patch it here to convert BigInt values to strings safely.
+BigInt.prototype.toJSON = function () { return this.toString(); };
 
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
@@ -68,7 +72,7 @@ exports.handler = async (event) => {
       // idempotencyKey prevents double-charges if the request is retried
       idempotencyKey: ref,
       amountMoney: {
-        amount: BigInt(amountCents),
+        amount: BigInt(amountCents), // BigInt required by Square SDK
         currency: 'USD',
       },
       note:                `ANAHIT Pre-Order ${ref} — ${customerName || 'Customer'}`,
@@ -90,6 +94,7 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
+    // Log the full error to Netlify function logs for debugging
     console.error('Square payment error:', JSON.stringify(error, null, 2));
 
     // Extract a human-readable message from Square's error format
