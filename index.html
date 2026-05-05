@@ -357,6 +357,9 @@
     font-size: 14px;
   }
   .order-row:last-child { border-bottom: none; }
+  .order-row.tax {
+    font-size: 13px; color: var(--muted);
+  }
   .order-row.total {
     font-size: 17px; font-weight: 500;
     color: var(--crust-dark); border-top: 2px solid var(--wheat);
@@ -1115,9 +1118,33 @@ function closeModal() {
   document.getElementById('modalOverlay').classList.remove('active');
 }
 
+// ── SALES TAX ──
+// NC state (4.75%) + Mecklenburg County (2.5%) = 7.25% through June 30, 2026
+// Mecklenburg County adds 1% effective July 1, 2026 → 8.25%
+function getSalesTaxRate() {
+  const rateChangeDate = new Date('2026-07-01');
+  return new Date() >= rateChangeDate ? 0.0825 : 0.0725;
+}
+
+function getSalesTax(subtotal) {
+  return subtotal * getSalesTaxRate();
+}
+
+function getOrderTotal() {
+  const subtotal = getCartTotal();
+  return subtotal + getSalesTax(subtotal);
+}
+
 function renderOrderSummary() {
   const items = getCartItems();
-  const total = getCartTotal();
+  const subtotal = getCartTotal();
+  const taxRate = getSalesTaxRate();
+  const tax = getSalesTax(subtotal);
+  const total = subtotal + tax;
+  const taxLabel = taxRate === 0.0825
+    ? 'Sales Tax (8.25% — Mecklenburg Co.)'
+    : 'Sales Tax (7.25% — Mecklenburg Co.)';
+
   document.getElementById('orderSummary').innerHTML = `
     ${items.map(i => `
       <div class="order-row">
@@ -1125,6 +1152,14 @@ function renderOrderSummary() {
         <span>$${(i.price * i.qty).toFixed(2)}</span>
       </div>
     `).join('')}
+    <div class="order-row" style="border-top:1px solid var(--border); padding-top:10px; margin-top:4px; color:var(--char-soft);">
+      <span>Subtotal</span>
+      <span>$${subtotal.toFixed(2)}</span>
+    </div>
+    <div class="order-row tax">
+      <span>${taxLabel}</span>
+      <span>$${tax.toFixed(2)}</span>
+    </div>
     <div class="order-row total">
       <span>Total</span>
       <span>$${total.toFixed(2)}</span>
@@ -1189,9 +1224,11 @@ async function submitOrder() {
     return;
   }
 
-  const items = getCartItems();
-  const total = getCartTotal();
-  const ref   = generateRef();
+  const items    = getCartItems();
+  const subtotal = getCartTotal();
+  const tax      = getSalesTax(subtotal);
+  const total    = subtotal + tax;
+  const ref      = generateRef();
 
   const btn = document.querySelector('.submit-btn');
   btn.textContent = 'Processing…';
@@ -1245,6 +1282,8 @@ async function submitOrder() {
         'Email':           email,
         'Phone':           phone || '—',
         'Order':           orderLines,
+        'Subtotal':        `$${subtotal.toFixed(2)}`,
+        'Sales Tax':       `$${tax.toFixed(2)} (${(getSalesTaxRate()*100).toFixed(2)}%)`,
         'Order Total':     `$${total.toFixed(2)}`,
         'Payment':         `Paid via Square ✓ (ID: ${chargeData.paymentId})`,
         'Join Email List': emailOptIn ? 'Yes' : 'No',
@@ -1276,6 +1315,8 @@ async function submitOrder() {
         customer_name:  `${first} ${last}`,
         customer_email: email,
         order_items:    orderItemsFormatted,
+        subtotal:       `$${subtotal.toFixed(2)}`,
+        sales_tax:      `$${tax.toFixed(2)}`,
         order_total:    `$${total.toFixed(2)}`,
         order_date:     orderDate,
         pickup_date:    pickupDate
